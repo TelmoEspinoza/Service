@@ -16,15 +16,15 @@ namespace Service.Controllers
         {
             _context = context;
         }
-
+       
         [HttpGet]
-        public IActionResult GetCustomers()
+        public ActionResult<IEnumerable<Customer>> GetCustomers()
         {
             var customers = _context.Customers.ToList();
             return Ok(customers);
         }
 
-       
+        
         [HttpPost]
         public IActionResult CreateCustomer(Customer customer)
         {
@@ -32,7 +32,7 @@ namespace Service.Controllers
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetCustomers), new { id = customer.Id }, customer);
         }
-        [HttpPost]
+        [HttpPut("{id}")]
         public IActionResult UpdateCustomer(int id, Customer updatedCustomer)
         {
             var customer = _context.Customers.Find(id);
@@ -50,7 +50,7 @@ namespace Service.Controllers
             return Ok(customer);
 
         }
-        [HttpPost]
+        [HttpDelete("{id}")]
         public IActionResult DeleteCustomer(int id)
         {
             var customer = _context.Customers.Find(id);

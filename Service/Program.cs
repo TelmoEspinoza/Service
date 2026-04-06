@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<MilkStoreContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MilkStore") ?? throw new InvalidOperationException("Connection string 'MilkStoreContext' not found.")));
@@ -15,8 +16,9 @@ builder.Services.AddCors(options =>
     {
         policy.AllowAnyHeader()
               .AllowCredentials()
+              .AllowAnyOrigin()
               .AllowAnyMethod()
-              .WithOrigins("http://localhost:4200"); // Replace with your React app's URL;
+              .WithOrigins("http://localhost:4200", "http://127.0.0.1:4200"); // Replace with your React app's URL;
     });
 });
 var app = builder.Build();
@@ -25,6 +27,9 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+
 }
 app.UseCors("AllowAll");
 app.UseHttpsRedirection();
